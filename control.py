@@ -13,4 +13,4 @@ def handleLeftKey(e):
 
 while True:
 
-    kb.on_press_key("left", handleLeftKey)s
+    kb.on_press_key("left", handleLeftKey)
