@@ -27,7 +27,7 @@ def handleAKey(YAW_ANGLE):
 def handleDKey(YAW_ANGLE):
     return min(YAW_ANGLE + 10, MAX_ANGLE)
 
-def move_gimbal(PITCH_ANGLE, ROLL_ANGLE=0, YAW_ANGLE=0):
+def move_gimbal(conn, PITCH_ANGLE, ROLL_ANGLE=0, YAW_ANGLE=0):
     """
     Moves gimbal to given position
     Args:
@@ -35,9 +35,9 @@ def move_gimbal(PITCH_ANGLE, ROLL_ANGLE=0, YAW_ANGLE=0):
         ROLL_ANGLE (float, optional): pan angle in centidegrees (0 is forward)
         YAW_ANGLE  (float, optional): pan angle in centidegrees (0 is forward)
     """
-    master.mav.command_long_send(
-        master.target_system,
-        master.target_component,
+    conn.mav.command_long_send(
+        conn.target_system,
+        conn.target_component,
         mavutil.mavlink.MAV_CMD_DO_MOUNT_CONTROL,
         1,
         PITCH_ANGLE,
@@ -48,12 +48,13 @@ def move_gimbal(PITCH_ANGLE, ROLL_ANGLE=0, YAW_ANGLE=0):
 
 
 
-devloc = 'udpin:0.0.0.0:14550'
+devloc = '/dev/ttyACM0'
 print('connecting to device on: ', devloc)
-master = mavutil.mavlink_connection(devloc)
-master.wait_heartbeat()
+conn = mavutil.mavlink_connection(devloc)
+conn.wait_heartbeat()
+print(conn.recv_match(blocking=True))
+# master.wait_heartbeat()
 print('heartbeat found')
-
 
 
 while True:
@@ -71,7 +72,8 @@ while True:
         YAW_ANGLE = handleDKey(YAW_ANGLE)
     else:
         continue
-    print("")
-    move_gimbal(PITCH_ANGLE, ROLL_ANGLE, YAW_ANGLE)
     print('pitch: ', PITCH_ANGLE, 'roll: ', ROLL_ANGLE, 'yaw: ', YAW_ANGLE)
+    print("sending command")
+    move_gimbal(conn, PITCH_ANGLE, ROLL_ANGLE, YAW_ANGLE)
+    print(" ")
     time.sleep(0.1)
