@@ -7,12 +7,13 @@ ROLL_ANGLE = 0
 YAW_ANGLE = 0
 
 
-def handleLeftKey(e):
+def handleLeftKey():
     YAW_ANGLE += 10
     return YAW_ANGLE
 
 while True:
 
-    kb.onpress_key("left", handleLeftKey)
+    if kb.is_pressed("left"):
+        handleLeftKey()
     print('yaw', YAW_ANGLE)
     time.leep(0.1)
