@@ -8,26 +8,27 @@ PITCH_ANGLE = 0
 ROLL_ANGLE = 0
 YAW_ANGLE = 0
 
-MAX_ANGLE = 180
-
+MAX_ROLL_ANGLE = 20
+MAX_PITCH_ANGLE = 90
+MAX_YAW_ANGLE = 180
 
 def handleLeftKey(ROLL_ANGLE):
-    return max(ROLL_ANGLE - 10, -MAX_ANGLE)
+    return max(ROLL_ANGLE - 10, -MAX_ROLL_ANGLE)
 
 def handleRightKey(ROLL_ANGLE):
-    return min(ROLL_ANGLE + 10, MAX_ANGLE)
+    return min(ROLL_ANGLE + 10, MAX_ROLL_ANGLE)
 
 def handleWKey(PITCH_ANGLE):
-    return min(PITCH_ANGLE + 10, MAX_ANGLE)
+    return min(PITCH_ANGLE + 10, MAX_PITCH_ANGLE)
 
 def handleSKey(PITCH_ANGLE):
-    return max(PITCH_ANGLE - 10, -MAX_ANGLE)
+    return max(PITCH_ANGLE - 10, -MAX_PITCH_ANGLE)
 
 def handleAKey(YAW_ANGLE):
-    return max(YAW_ANGLE - 10, -MAX_ANGLE)
+    return max(YAW_ANGLE - 10, -MAX_YAW_ANGLE)
 
 def handleDKey(YAW_ANGLE):
-    return min(YAW_ANGLE + 10, MAX_ANGLE)
+    return min(YAW_ANGLE + 10, MAX_YAW_ANGLE)
 
 if V2:
     def move_gimbal(conn, PITCH_ANGLE, ROLL_ANGLE=0, YAW_ANGLE=0):
