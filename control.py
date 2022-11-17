@@ -2,6 +2,8 @@ from pymavlink import mavutil
 import keyboard as kb
 import time
 
+V2 = False
+
 PITCH_ANGLE = 0
 ROLL_ANGLE = 0
 YAW_ANGLE = 0
@@ -27,15 +29,29 @@ def handleAKey(YAW_ANGLE):
 def handleDKey(YAW_ANGLE):
     return min(YAW_ANGLE + 10, MAX_ANGLE)
 
-def move_gimbal(conn, PITCH_ANGLE, ROLL_ANGLE=0, YAW_ANGLE=0):
-    """
-    Moves gimbal to given position
-    Args:
-        PITCH_ANGLE (float): tilt angle in centidegrees (0 is forward)
-        ROLL_ANGLE (float, optional): pan angle in centidegrees (0 is forward)
-        YAW_ANGLE  (float, optional): pan angle in centidegrees (0 is forward)
-    """
-    conn.mav.command_long_send(
+if V2:
+    def move_gimbal(conn, PITCH_ANGLE, ROLL_ANGLE=0, YAW_ANGLE=0):
+        """
+        Moves gimbal to given position
+        Args:
+            PITCH_ANGLE (float): tilt angle in centidegrees (0 is forward)
+            ROLL_ANGLE (float, optional): pan angle in centidegrees (0 is forward)
+            YAW_ANGLE  (float, optional): pan angle in centidegrees (0 is forward)
+        """
+        conn.mav.command_long_send(
+            conn.target_system,
+            conn.target_component,
+            mavutil.mavlink.MAV_CMD_DO_GIMBAL_MANAGER_PITCHYAW,
+            1,
+            PITCH_ANGLE,
+            YAW_ANGLE,
+            10,
+            10,
+            0, 0,
+            mavutil.mavlink.MAV_MOUNT_MODE_MAVLINK_TARGETING)
+else:
+    def move_gimbal(conn, PITCH_ANGLE, ROLL_ANGLE=0, YAW_ANGLE=0):
+        conn.mav.command_long_send(
         conn.target_system,
         conn.target_component,
         mavutil.mavlink.MAV_CMD_DO_MOUNT_CONTROL,
@@ -46,15 +62,16 @@ def move_gimbal(conn, PITCH_ANGLE, ROLL_ANGLE=0, YAW_ANGLE=0):
         0, 0, 0,
         mavutil.mavlink.MAV_MOUNT_MODE_MAVLINK_TARGETING)
 
-
-
 devloc = '/dev/ttyACM0'
 print('connecting to device on: ', devloc)
 conn = mavutil.mavlink_connection(devloc)
 conn.wait_heartbeat()
 print(conn.recv_match(blocking=True))
-# master.wait_heartbeat()
 print('heartbeat found')
+
+# while True:
+#     print('msg: ', conn.recv_match(blocking=True))
+    
 
 
 while True:
