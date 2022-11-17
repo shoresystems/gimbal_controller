@@ -3,6 +3,7 @@ import keyboard as kb
 import time
 
 V2 = False
+TELEM = True
 
 PITCH_ANGLE = 0
 ROLL_ANGLE = 0
@@ -63,7 +64,11 @@ else:
         0, 0, 0,
         mavutil.mavlink.MAV_MOUNT_MODE_MAVLINK_TARGETING)
 
-devloc = '/dev/ttyACM0'
+if TELEM:
+    devloc = '/dev/ttyUSB0'
+else:
+    devloc = '/dev/ttyACM0'
+
 print('connecting to device on: ', devloc)
 conn = mavutil.mavlink_connection(devloc)
 conn.wait_heartbeat()
