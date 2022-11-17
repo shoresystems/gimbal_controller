@@ -65,12 +65,12 @@ else:
         mavutil.mavlink.MAV_MOUNT_MODE_MAVLINK_TARGETING)
 
 if TELEM:
-    devloc = '/dev/ttyUSB0'
+    devloc = '/dev/ttyUSB1'
 else:
     devloc = '/dev/ttyACM0'
 
 print('connecting to device on: ', devloc)
-conn = mavutil.mavlink_connection(devloc)
+conn = mavutil.mavlink_connection(devloc, baud=57600)
 conn.wait_heartbeat()
 print(conn.recv_match(blocking=True))
 print('heartbeat found')
