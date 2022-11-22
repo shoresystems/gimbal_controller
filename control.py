@@ -31,6 +31,10 @@ def handleAKey(YAW_ANGLE):
 def handleDKey(YAW_ANGLE):
     return min(YAW_ANGLE + 10, MAX_YAW_ANGLE)
 
+def handlePKey():
+    return 0, 0, 0
+
+
 if V2:
     def move_gimbal(conn, PITCH_ANGLE, ROLL_ANGLE=0, YAW_ANGLE=0):
         """
@@ -93,6 +97,8 @@ while True:
         YAW_ANGLE = handleAKey(YAW_ANGLE)
     elif kb.is_pressed("d"):
         YAW_ANGLE = handleDKey(YAW_ANGLE)
+    elif kb.is_pressed("p"):
+        ROLL_ANGLE, PITCH_ANGLE, YAW_ANGLE  = handlePKey()
     else:
         continue
     print('pitch: ', PITCH_ANGLE, 'roll: ', ROLL_ANGLE, 'yaw: ', YAW_ANGLE)
